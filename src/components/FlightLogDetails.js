@@ -20,7 +20,8 @@ const FlightLogDetails = ({ flightlogs }) => {
     const handleUpdate = async () => {
         if (!user) return;
 
-        const response = await fetch('https://pilot-portal-backend.onrender.com/api/flight-logs/' + flightlogs._id, {
+        const response = await fetch('https://pilot-simulation-backend.onrender.com/api/flight-logs/' + flightlogs._id, {
+            // const response = await fetch('/api/flight-logs', {
             method: 'PATCH', 
             headers: {
                 'Content-Type': 'application/json',

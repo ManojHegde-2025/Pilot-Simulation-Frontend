@@ -13,7 +13,8 @@ const History = () => {
 
   useEffect(() => {
     const fetchFlightLogs = async () => {
-      const response = await fetch('https://pilot-portal-backend.onrender.com/api/flight-logs', {
+      const response = await fetch('https://pilot-simulation-backend.onrender.com/api/flight-logs', {
+        // const response = await fetch('/api/flight-logs', {
         headers: {
           'Authorization': `Bearer ${user.token}`
         }

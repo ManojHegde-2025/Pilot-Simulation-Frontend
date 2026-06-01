@@ -56,7 +56,7 @@ const FlightLogForm = () => {
         };
 
         try{
-            const response = await fetch('https://pilot-simulation-backend.onrender.com', {
+            const response = await fetch('https://pilot-simulation-backend.onrender.com/api/flight-logs/', {
             // const response = await fetch('/api/flight-logs', {
                 method: 'POST',
                 body: JSON.stringify(logData),

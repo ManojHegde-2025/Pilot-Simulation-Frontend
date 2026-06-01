@@ -9,7 +9,7 @@ export const useLogin = () => {
     setIsLoading(true)
     setError(null)
 
-    const response = await fetch('https://pilot-simulation-backend.onrender.com',{
+    const response = await fetch('https://pilot-simulation-backend.onrender.com/api/user/login',{
     // const response = await fetch('/api/user/login',{
     method: 'POST',
     headers: {'Content-Type': 'application/json'},

@@ -79,8 +79,8 @@ const FlightLogForm = () => {
                     `*Name:* ${name}\n` +
                     `*Start Time:* ${formattedStartTime}\n` +
                     `*End Time:* ${formattedEndTime}\n` +
-                    `*Wind:* ${wind} mph\n` +
-                    `*Description:* ${description || 'No additional notes'}`;
+                    `*Description:* ${description || 'No additional notes'}`+
+                    `*Wind:* ${wind} mph\n`;
 
                 const encodedMessage = encodeURIComponent(waMessage);
                 window.location.href = `https://api.whatsapp.com/send?text=${encodedMessage}`;

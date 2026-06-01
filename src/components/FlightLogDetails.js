@@ -20,8 +20,8 @@ const FlightLogDetails = ({ flightlogs }) => {
     const handleUpdate = async () => {
         if (!user) return;
 
-        const response = await fetch('https://pilot-simulation-backend.onrender.com/api/flight-logs/' + flightlogs._id, {
-            // const response = await fetch('/api/flight-logs', {
+        const response = await fetch('https://pilot-simulation-backend.onrender.com' + flightlogs._id, {
+        // const response = await fetch('/api/flight-logs', {
             method: 'PATCH', 
             headers: {
                 'Content-Type': 'application/json',
@@ -91,14 +91,14 @@ const FlightLogDetails = ({ flightlogs }) => {
             <div style={{ marginTop: '15px', fontSize: '0.9em', color: '#aaa' }}>
                 <p>
                     <strong>Created: </strong> 
-                    {format(new Date(flightlogs.createdAt), 'dd/MM/yyyy hh:mm aa ')} 
+                    {format(new Date(flightlogs.createdAt), 'dd/MM/yyyy HH:mm')} 
                     ({formatDistanceToNow(new Date(flightlogs.createdAt), { addSuffix: true })})
                 </p>
                 
                 {flightlogs.createdAt !== flightlogs.updatedAt && (
                     <p>
                         <strong>Modified: </strong> 
-                        {format(new Date(flightlogs.updatedAt), 'dd/MM/yyyy hh:mm aa ')}
+                        {format(new Date(flightlogs.updatedAt), 'dd/MM/yyyy HH:mm')}
                         ({formatDistanceToNow(new Date(flightlogs.updatedAt), { addSuffix: true })})
                     </p>
                 )}

@@ -11,10 +11,10 @@ export const useSignup = () => {
 
     // const response = await fetch('https://pilot-portal-backend.onrender.com/api/user/signup',{
     const response = await fetch('/api/user/signup',{
-      method:'POST',
-      headers: {'content-type': 'application/json'},
-      body:JSON.stringify({name,email,password,inviteCode})
-    })
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ name, email, password, inviteCode })
+})
 
     const json = await response.json();
     if(!response.ok){

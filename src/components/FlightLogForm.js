@@ -7,14 +7,23 @@ const FlightLogForm = () => {
     const { user } = useAuthContext();
     
     // --- Configuration Lists ---
-    const namesList = ["Manoj", "Pratham"];
+    const namesList = ["Ashlaeesh","Abhineesh","Adarsh","Adyanth","Akhileesh","Manoj", "Pratham", "Pratish", "Shashank", "Shree Raghavendra", "Suchetha"];
 
     // --- State Management ---
     const [isLoading, setIsLoading] = useState(false);
     const [name, setName] = useState('');
-    const [startTime, setStartTime] = useState('');
-    const [endTime, setEndTime] = useState('');
+    
+    // Split Time States
+    const [startHour, setStartHour] = useState('');
+    const [startMin, setStartMin] = useState('');
+    const [endHour, setEndHour] = useState('');
+    const [endMin, setEndMin] = useState('');
+    
     const [totalFlyingHours, setTotalFlyingHours] = useState('');
+    
+    // New Wind State
+    const [wind, setWind] = useState('');
+    
     const [description, setDescription] = useState('');
     
     const [error, setError] = useState('');
@@ -31,20 +40,24 @@ const FlightLogForm = () => {
         setIsLoading(true); 
         setError('');       
         
-        // Date is handled on the backend, but we need it for WhatsApp
         const currentDate = new Date().toLocaleDateString('en-GB');
 
+        // Combine the Hours and Minutes into a strict HH:mm format before sending
+        const formattedStartTime = `${String(startHour).padStart(2, '0')}:${String(startMin).padStart(2, '0')}`;
+        const formattedEndTime = `${String(endHour).padStart(2, '0')}:${String(endMin).padStart(2, '0')}`;
+
+        // Notice: 'wind' is NOT included here so it won't be sent to MongoDB or Google Sheets
         const logData = {
             name,
-            startTime,
-            endTime,
+            startTime: formattedStartTime,
+            endTime: formattedEndTime,
             totalFlyingHours: Number(totalFlyingHours),
             description
         };
 
         try{
-            const response = await fetch('https://pilot-simulation-backend.onrender.com/api/flight-logs', {
-                // const response = await fetch('/api/flight-logs', {
+            const response = await fetch('https://pilot-simulation-backend.onrender.com', {
+            // const response = await fetch('/api/flight-logs', {
                 method: 'POST',
                 body: JSON.stringify(logData),
                 headers: {
@@ -60,13 +73,13 @@ const FlightLogForm = () => {
                 setIsLoading(false); 
             }
             else {
-                // --- WHATSAPP MESSAGE FORMAT ---
-                const waMessage = `\u2708\uFE0F *New Simulation Log Report*\n\n` +
+                // --- WHATSAPP MESSAGE FORMAT (Includes Wind) ---
+                const waMessage =
                     `*Date:* ${currentDate}\n` +
                     `*Name:* ${name}\n` +
-                    `*Start Time:* ${startTime}\n` +
-                    `*End Time:* ${endTime}\n` +
-                    `*Total Flying Hours:* ${totalFlyingHours}\n` +
+                    `*Start Time:* ${formattedStartTime}\n` +
+                    `*End Time:* ${formattedEndTime}\n` +
+                    `*Wind:* ${wind} mph\n` +
                     `*Description:* ${description || 'No additional notes'}`;
 
                 const encodedMessage = encodeURIComponent(waMessage);
@@ -75,9 +88,12 @@ const FlightLogForm = () => {
                 // --- RESET FORM ---
                 setError(null);
                 setName('');
-                setStartTime('');
-                setEndTime('');
+                setStartHour('');
+                setStartMin('');
+                setEndHour('');
+                setEndMin('');
                 setTotalFlyingHours('');
+                setWind('');
                 setDescription('');
                 setEmptyFields([]);
                 setIsLoading(false); 
@@ -106,40 +122,75 @@ const FlightLogForm = () => {
             </select>
         </div>
 
-        <div className="form-row" style={{ display: 'flex', gap: '10px' }}>
-            <div className="form-group" style={{ flex: 1 }}>
-                <label>Start Time :</label>
+        <div className="form-group">
+            <label>Start Time (24 Hr) :</label>
+            <div style={{ display: 'flex', gap: '10px' }}>
                 <input 
                     className={emptyFields.includes('startTime') ? 'error form-input' : 'form-input'} 
-                    type="time" 
-                    value={startTime} 
-                    onChange={(e) => setStartTime(e.target.value)} 
+                    type="number" min="0" max="23" 
+                    value={startHour} 
+                    onChange={(e) => setStartHour(e.target.value)} 
+                    placeholder='HH (0-23)' 
                     required 
                 />
-            </div>
-            <div className="form-group" style={{ flex: 1 }}>
-                <label>End Time :</label>
                 <input 
-                    className={emptyFields.includes('endTime') ? 'error form-input' : 'form-input'} 
-                    type="time" 
-                    value={endTime} 
-                    onChange={(e) => setEndTime(e.target.value)} 
+                    className={emptyFields.includes('startTime') ? 'error form-input' : 'form-input'} 
+                    type="number" min="0" max="59" 
+                    value={startMin} 
+                    onChange={(e) => setStartMin(e.target.value)} 
+                    placeholder='MM (0-59)' 
                     required 
                 />
             </div>
         </div>
 
         <div className="form-group">
-            <label>Total Flying Hours :</label>
-            <input 
-                className={emptyFields.includes('totalFlyingHours') ? 'error form-input' : 'form-input'} 
-                type="number" 
-                step="0.01"
-                value={totalFlyingHours} 
-                onChange={(e) => setTotalFlyingHours(e.target.value)} 
-                placeholder="Ex: 1.5" 
-                required 
-            />
+            <label>End Time (24 Hr) :</label>
+            <div style={{ display: 'flex', gap: '10px' }}>
+                <input 
+                    className={emptyFields.includes('endTime') ? 'error form-input' : 'form-input'} 
+                    type="number" min="0" max="23" 
+                    value={endHour} 
+                    onChange={(e) => setEndHour(e.target.value)} 
+                    placeholder='HH (0-23)' 
+                    required 
+                />
+                <input 
+                    className={emptyFields.includes('endTime') ? 'error form-input' : 'form-input'} 
+                    type="number" min="0" max="59" 
+                    value={endMin} 
+                    onChange={(e) => setEndMin(e.target.value)} 
+                    placeholder='MM (0-59)' 
+                    required 
+                />
+            </div>
+        </div>
+
+        <div className="form-row" style={{ display: 'flex', gap: '10px' }}>
+            <div className="form-group" style={{ flex: 1 }}>
+                <label>Duration :</label>
+                <input 
+                    className={emptyFields.includes('totalFlyingHours') ? 'error form-input' : 'form-input'} 
+                    type="number" 
+                    step="0.01"
+                    value={totalFlyingHours} 
+                    onChange={(e) => setTotalFlyingHours(e.target.value)} 
+                    placeholder="Ex: 1.5" 
+                    required 
+                />
+            </div>
+
+            <div className="form-group" style={{ flex: 1 }}>
+                <label>Wind Speed (mph) :</label>
+                <input 
+                    className="form-input" 
+                    type="number" 
+                    value={wind} 
+                    onChange={(e) => setWind(e.target.value)} 
+                    placeholder="Ex: 5" 
+                    required 
+                />
+            </div>
         </div>
 
         <div className="form-group">

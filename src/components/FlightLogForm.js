@@ -79,7 +79,7 @@ const FlightLogForm = () => {
                     `*Name:* ${name}\n` +
                     `*Start Time:* ${formattedStartTime}\n` +
                     `*End Time:* ${formattedEndTime}\n` +
-                    `*Description:* ${description || 'No additional notes'}`+
+                    `*Description:* ${description || 'No additional notes'}\n`+
                     `*Wind:* ${wind} mph\n`;
 
                 const encodedMessage = encodeURIComponent(waMessage);
